@@ -3,8 +3,8 @@
 version: "3"
 
 vars:
-  APP_NAME: vaccine_hpv_api
-  APP_BUILD: 40
+  APP_NAME: template_backend_api
+  APP_BUILD: 1
   APP_TS:
     sh: date -Is || echo "2023-10-04T12:43:08+07:00"
   GO_MODULE:
@@ -14,7 +14,7 @@ vars:
     -X '{{.GO_MODULE}}/cmd.AppName={{.APP_NAME}}' \
     -X '{{.GO_MODULE}}/cmd.Build={{.APP_BUILD}}' \
     -X '{{.GO_MODULE}}/cmd.TS={{.APP_TS}}'" \
-  DOCKER_REGISTRY_URL: indev.moph.go.th:5000/jhcis-platform/{{.APP_NAME}}
+  DOCKER_IMAGE: "{{.APP_NAME}}"
 
 tasks:
   default:
@@ -27,12 +27,7 @@ tasks:
       - .env
     cmds:
       - go run main.go serv
-      # - ./build/{{.APP_NAME}} serv
-  test:
-    dotenv:
-      - .env
-    cmds:
-      - go run main.go t
+
   version:
     dotenv:
       - .env
@@ -50,6 +45,7 @@ tasks:
       - |
         sed -i "s/^  APP_BUILD: .*$/  APP_BUILD: $(({{.APP_BUILD}}+1))/" Taskfile.yaml
         echo "APP_BUILD: $(({{.APP_BUILD}}+1))"
+
   build:
     cmds:
       - mkdir -p build
@@ -57,21 +53,13 @@ tasks:
         CGO_ENABLED=0 GOOS=linux go build \
         -a {{.GO_LDFLAGS}} \
         -o ./build/{{.APP_NAME}} main.go
-  uat:
-    - task docker-build
-    - task docker-push
-    - task server-up
 
   docker-build:
     - task increase-build-version
     - task build
     - |
       docker build --build-arg APP_NAME={{.APP_NAME}} \
-      --tag {{.DOCKER_REGISTRY_URL}}:latest \
+      --tag {{.DOCKER_IMAGE}}:latest \
       .
   docker-push:
-    - docker push {{.DOCKER_REGISTRY_URL}}:latest
-
-  server-up:
-    - echo "Recreate Services"
-  # - curl -X POST https://cvp2.moph.go.th/portainer/api/webhooks/8a4db3e9-1715-404e-8eaf-610a747ee872?tag=latest
+    - docker push {{.DOCKER_IMAGE}}:latest
