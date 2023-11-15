@@ -25,6 +25,6 @@ func (m *ModelID) NewID() ksuid.KSUID {
 type EntityRecordLog struct {
 	CreatedAt time.Time `json:"created_at" gorm:"autoCreateTime:milli"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime:milli"`
-	DeletedAt time.Time
+	DeletedAt *time.Time
 	IsDel     soft_delete.DeletedAt `gorm:"index;softDelete:flag,DeletedAtField:DeletedAt"` // use `1` `0`
 }
