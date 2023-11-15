@@ -33,7 +33,10 @@ tasks:
       - .env
     cmds:
       - go run main.go version
-
+  swag:
+    cmds:
+      - swag init
+      - swag fmt
   mod:
     cmds:
       - go mod download
