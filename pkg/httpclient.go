@@ -23,7 +23,7 @@ func FastHTTPGet(url string, headers map[string]string) ([]byte, error) {
 
 // FastHTTPPost sends a POST request to the specified URL with the given body and headers.
 func FastHTTPPost(url string, body []byte, headers map[string]string) ([]byte, error) {
-	return FastHTTPRequest(url, fasthttp.MethodGet, body, headers)
+	return FastHTTPRequest(url, fasthttp.MethodPost, body, headers)
 }
 
 // FastHTTPRequest makes a fast HTTP request to the specified URL using the given method, body, and headers.
