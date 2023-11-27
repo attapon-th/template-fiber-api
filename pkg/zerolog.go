@@ -1,7 +1,9 @@
 package pkg
 
 import (
+	"io"
 	"os"
+	"path"
 	"strconv"
 	"time"
 
@@ -13,8 +15,9 @@ import (
 // InitZeroLog initializes zerolog
 func InitZeroLog() {
 	viper.SetDefault("log_level", zerolog.InfoLevel)
-	viper.SetDefault("log_output", "")
+	viper.SetDefault("log_file", "console")
 	viper.SetDefault("log_caller", false)
+	viper.SetDefault("log_dir", "./logs")
 
 	lvl, err := zerolog.ParseLevel(viper.GetString("log_level"))
 	if err != nil {
@@ -23,12 +26,20 @@ func InitZeroLog() {
 
 	zerolog.SetGlobalLevel(lvl)
 	zerolog.TimeFieldFormat = time.RFC3339Nano
-	f, err := NewLogfileWriter(viper.GetString("log_output"))
-	if err != nil {
-		log.Fatal().Str("file", viper.GetString("log_output")).Msg(err.Error())
-	}
+	var wr io.Writer = zerolog.NewConsoleWriter()
+	if viper.GetString("log_file") != "console" {
+		logDir := viper.GetString("log_dir")
+		if logDir != "" {
+			logDir = "./"
+		}
+		filename := path.Join(logDir, viper.GetString("log_file"))
+		f := NewDiodeCronWriter(filename)
+		if err != nil {
+			log.Fatal().Str("file", viper.GetString("log_file")).Msg(err.Error())
+		}
+		wr = zerolog.MultiLevelWriter(zerolog.ConsoleWriter{Out: os.Stdout}, f)
 
-	wr := zerolog.MultiLevelWriter(zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: "2006-01-02T15:04:05.999Z07:00"}, f)
+	}
 	log.Logger = log.Output(wr)
 	if viper.GetBool("log_caller") {
 		setCaller()

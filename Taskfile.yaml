@@ -58,11 +58,13 @@ tasks:
         -o ./build/{{.APP_NAME}} main.go
 
   docker-build:
-    - task increase-build-version
-    - task build
-    - |
-      docker build --build-arg APP_NAME={{.APP_NAME}} \
-      --tag {{.DOCKER_IMAGE}}:latest \
-      .
+    dir: ./docker
+    cmds:
+      - task increase-build-version
+      - task build
+      - |
+        docker build --build-arg APP_NAME={{.APP_NAME}} \
+        --tag {{.DOCKER_IMAGE}}:latest \
+        .
   docker-push:
     - docker push {{.DOCKER_IMAGE}}:latest

@@ -1,11 +1,14 @@
 package pkg
 
 import (
+	"fmt"
+	"io"
 	"os"
 	"path"
+	"time"
 
+	"github.com/rs/zerolog/diode"
 	"github.com/rs/zerolog/log"
-	"github.com/spf13/viper"
 	"github.com/utahta/go-cronowriter"
 )
 
@@ -16,18 +19,22 @@ func CronFileWriter(filename string) *cronowriter.CronoWriter {
 		log.Fatal().Str("dir", path.Dir(filename)).Msg(err.Error())
 		return nil
 	}
-	return cronowriter.MustNew(filename+".%Y%m%d", cronowriter.WithInit())
+
+	fStr, ext := path.Split(filename)
+	return cronowriter.MustNew(fStr+"-%Y%m%d"+ext, cronowriter.WithInit(), cronowriter.WithMutex())
 }
 
-// NewLogfileWriter create log file
-func NewLogfileWriter(filename string) (*cronowriter.CronoWriter, error) {
-	if filename == "" {
-		return nil, nil
-	}
-	logDir := viper.GetString("log_dir")
-	fout := filename
-	fout = path.Join(logDir, fout)
+// NewDiodeWriter Thread-safe, lock-free, non-blocking writer
+func NewDiodeWriter(w io.WriteCloser) io.WriteCloser {
+	wr := diode.NewWriter(w, 1000, 10*time.Millisecond, func(missed int) {
+		fmt.Printf("Logger Dropped %d messages", missed)
+	})
+	return wr
+}
 
-	f := CronFileWriter(fout)
-	return f, nil
+// NewDiodeCronWriter  logfile rotation and Thread-safe, lock-free, non-blocking writer
+func NewDiodeCronWriter(filename string) io.WriteCloser {
+	w := NewDiodeCronWriter(filename)
+	wr := NewDiodeWriter(w)
+	return wr
 }

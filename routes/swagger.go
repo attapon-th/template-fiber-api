@@ -1,11 +1,11 @@
-package route
+package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/swagger"
 )
 
-func setupSwager(r fiber.Router, prefix string) {
+func cretateSwagerRoute(r fiber.Router) {
 	// if baseURL, err := url.Parse(viper.GetString("base_url")); err == nil {
 	// 	docs.SwaggerInfo.BasePath = prefix
 	// 	docs.SwaggerInfo.Host = baseURL.Host

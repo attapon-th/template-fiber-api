@@ -30,8 +30,8 @@ func NewFiber(config ...fiber.Config) *FiberConfig {
 	var cfg fiber.Config
 	if len(config) == 0 {
 		cfg = fiber.Config{
-			AppName:                      "JHCIS API Service",
-			ServerHeader:                 "JHCIS API Service",
+			AppName:                      "API Service",
+			ServerHeader:                 "API Service",
 			BodyLimit:                    1 * 1024 * 1024, // 1MB
 			ReadBufferSize:               10 * 1024,
 			ReadTimeout:                  10 * time.Second,
