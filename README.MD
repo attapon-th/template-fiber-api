@@ -1,8 +1,16 @@
 # Github Template API Service with Fiber V2 Framework 
 
-> The following is a folder structure pattern that I use  
+> The following is a folder structure pattern that I use 
 > [Golang Clean Architecture - https://github.com/restuwahyu13/go-clean-architecture](https://github.com/restuwahyu13/go-clean-architecture) 
 > 
+
+### Root Folder Structure
+
+<img src="./images/folder-structure.png" width="600px" alt="Folder Structure" />
+
+### Go Import Flow
+<img src="./images/go-import-flow.png" width="600px" alt="Folder Structure" />
+
 
 ## Prerequisites
 
