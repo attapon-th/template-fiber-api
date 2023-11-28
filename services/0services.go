@@ -1,6 +1,4 @@
 package services
 
-// NewServices create new services
-func NewServices() {
-
+type PaginationSerivce struct {
 }

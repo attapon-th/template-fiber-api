@@ -1,8 +1,10 @@
+// Package schemas for Request and Response Schema
 package schemas
 
 // APIResponse Default API Response
 type APIResponse struct {
 	OK      bool   `json:"ok"`
+	Code    int    `json:"code"`
 	Message string `json:"message"`
 }
 

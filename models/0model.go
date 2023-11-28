@@ -13,8 +13,8 @@ type ModelID struct {
 	ID ksuid.KSUID `json:"id" gorm:"column:id;type:varchar(27);primary_key"`
 }
 
-// ModelRecordVersion record version timestamp and soft delete flag
-type ModelRecordVersion struct {
+// ModelRecordStamp record version timestamp and soft delete flag
+type ModelRecordStamp struct {
 	CreatedAt time.Time `json:"-" gorm:"autoCreateTime:milli"`
 	UpdatedAt time.Time `json:"updated_at" gorm:"autoUpdateTime:milli"`
 	DeletedAt *time.Time

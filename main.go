@@ -3,6 +3,8 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 */
 package main
 
+import "github.com/attapon-th/template-fiber-api/cmd"
+
 //	@title			Swagger Example API
 //	@version		1.0
 //	@description	This is a sample server celler server.
@@ -23,5 +25,5 @@ package main
 // @externalDocs.description	OpenAPI
 // @externalDocs.url			https://swagger.io/resources/open-api/
 func main() {
-	// cmd.Execute()
+	cmd.Execute()
 }

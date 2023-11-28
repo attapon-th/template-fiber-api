@@ -26,7 +26,7 @@ func InitZeroLog() {
 
 	zerolog.SetGlobalLevel(lvl)
 	zerolog.TimeFieldFormat = time.RFC3339Nano
-	var wr io.Writer = zerolog.NewConsoleWriter()
+	var wr io.Writer = zerolog.ConsoleWriter{Out: os.Stdout, TimeFormat: zerolog.TimeFieldFormat}
 	if viper.GetString("log_file") != "console" {
 		logDir := viper.GetString("log_dir")
 		if logDir != "" {
@@ -37,7 +37,7 @@ func InitZeroLog() {
 		if err != nil {
 			log.Fatal().Str("file", viper.GetString("log_file")).Msg(err.Error())
 		}
-		wr = zerolog.MultiLevelWriter(zerolog.ConsoleWriter{Out: os.Stdout}, f)
+		wr = zerolog.MultiLevelWriter(wr, f)
 
 	}
 	log.Logger = log.Output(wr)

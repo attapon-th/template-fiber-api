@@ -81,7 +81,7 @@ func (c *FiberConfig) Listen() error {
 }
 
 // FiberErrorHandler handles errors
-func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
+func FiberErrorHandler(c *fiber.Ctx, err error) error {
 	// Status code defaults to 500
 	code := fiber.StatusInternalServerError
 	msg := "Internal Server Error"
@@ -92,10 +92,14 @@ func FiberErrorHandler(ctx *fiber.Ctx, err error) error {
 		code = e.Code
 		msg = e.Error()
 	}
-	ctx.Set("Content-Type", fiber.MIMEApplicationJSONCharsetUTF8)
+	c.Set("Content-Type", fiber.MIMEApplicationJSONCharsetUTF8)
 
 	// Send custom error page
-	err = ctx.Status(code).JSON(fiber.Map{"ok": false, "message": msg})
+	err = c.Status(code).JSON(fiber.Map{
+		"code":    code,
+		"ok":      false,
+		"message": msg,
+	})
 
 	// Return from handler
 	return nil

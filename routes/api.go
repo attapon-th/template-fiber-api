@@ -2,18 +2,12 @@
 package routes
 
 import (
-	"strings"
-
+	"github.com/attapon-th/template-fiber-api/controllers/todoctl"
 	"github.com/gofiber/fiber/v2"
-	"github.com/rs/zerolog/log"
-	"github.com/spf13/viper"
 )
 
 // Init initializes fiber router
 func createRestAPIRouter(r fiber.Router) {
-	prefix := viper.GetString("prefix")
-	prefix = strings.TrimSuffix(prefix, "/")
-
-	log.Debug().Str("path", prefix).Msg("Router RestAPI initialized")
-
+	apiV1 := r.Group("/v1")
+	todoctl.NewTodoCtl(apiV1.Group("/todos")) // prefix+/api/v1/todos
 }
