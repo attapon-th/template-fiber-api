@@ -1,6 +1,9 @@
 package todoctl
 
 import (
+	"strconv"
+
+	"github.com/attapon-th/template-fiber-api/services/todosrv"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
 	zlog "github.com/rs/zerolog/log"
@@ -24,13 +27,26 @@ func NewTodoCtl(r fiber.Router) {
 }
 
 func gets(c *fiber.Ctx) error {
-	// TODO: implement me
-	return nil
+
+	sv := todosrv.NewTodoService(c.UserContext())
+
+	q := c.Queries()
+	limit, _ := strconv.ParseInt(c.Query("_limit", "10"), 10, 64)
+	page, _ := strconv.ParseInt(c.Query("_page", "1"), 10, 64)
+
+	result := sv.Gets(limit, page, q)
+	return c.Status(result.Code).JSON(result)
 
 }
 func getByID(c *fiber.Ctx) error {
-	// TODO: implement me
-	return nil
+	id := c.Params("id")
+	if len(id) != 27 {
+		return fiber.NewError(400, "invalid id")
+	}
+
+	sv := todosrv.NewTodoService(c.UserContext())
+	result := sv.GetByID(id)
+	return c.JSON(result)
 }
 
 func create(c *fiber.Ctx) error {

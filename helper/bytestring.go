@@ -1,6 +1,6 @@
-// Package vtils is a collection of useful functions
+// Package helper is a collection of useful functions
 // from https://github.com/tsingson/fasthttp-guide
-package vtils
+package helper
 
 import (
 	"encoding/binary"
@@ -73,7 +73,7 @@ func GetFileSize(fullFilename string) int64 {
 	if err != nil {
 		return 0
 	}
-	fileSize := fileInfo.Size() // 获取size
+	fileSize := fileInfo.Size() // size
 	return fileSize
 }
 

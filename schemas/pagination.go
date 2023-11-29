@@ -41,8 +41,8 @@ func NewPagination(currentPage, sizePage int64) *Pagination {
 	}
 }
 
-// NewPaginationWithTotalRecord create new pagination with total record
-func NewPaginationWithTotalRecord(currentPage, sizePage, totalRecord int64) *Pagination {
+// NewPaginationFull create new pagination with total record
+func NewPaginationFull(currentPage, sizePage, totalRecord int64) *Pagination {
 	p := NewPagination(currentPage, sizePage)
 	return p.SetTotalRecord(totalRecord)
 }
