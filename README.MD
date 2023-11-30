@@ -1,15 +1,26 @@
-# Github Template API Service with Fiber V2 Framework 
+# Goland Template API Service 
+with Fiber V2 Framework 
 
 > The following is a folder structure pattern that I use 
 > [Golang Clean Architecture - https://github.com/restuwahyu13/go-clean-architecture](https://github.com/restuwahyu13/go-clean-architecture) 
 > 
 
-### Root Folder Structure
+## Table of Contents
+- [Goland Template API Service](#goland-template-api-service)
+  - [Table of Contents](#table-of-contents)
+  - [Root Folder Structure](#root-folder-structure)
+  - [Go Import Flow](#go-import-flow)
+  - [Prerequisites](#prerequisites)
+  - [How to setup](#how-to-setup)
+  - [How to Run](#how-to-run)
 
-<img src="./images/folder-structure.png" width="600px" alt="Folder Structure" />
 
-### Go Import Flow
-<img src="./images/go-import-flow.png" width="600px" alt="Folder Structure" />
+## Root Folder Structure
+
+<img src="./images/folder-structure.png" width="800px" alt="Folder Structure" />
+
+## Go Import Flow
+<img src="./images/go-import-flow.png" width="800px" alt="Folder Structure" />
 
 
 ## Prerequisites
@@ -26,7 +37,16 @@
     ```bash
     go mod init github.com/xxx/xxx
     ```
-2. Download Go Module
+
+2. Replace `default.env` to [`.env`](./.env)
+    ```bash
+    mv default.env .env
+    ```
+3. Change go import `github.com/attapon-th/template-fiber-api` to your go module
+    
+    <img src="./images/chage-go-import.png" width="600px" alt="Folder Structure" />
+
+4. Download Go Module
   
     with `taskfile`
     ```bash
@@ -38,18 +58,13 @@
     go mod tidy
     go mod vendor
     ```
-3. Uncomment files
 
-    - [`main.go`](./main.go) - line: `26`
-    - [`cmd/serv.go`](./cmd/serv.go) - line: `19 - 33`
-    - [`routes/0route.go`](./routes/0route.go) - line: `16 - 21`
-
-4. Rename [`default.env`](./default.env) to [`.env`](./.env)
+5. Rename [`default.env`](./default.env) to [`.env`](./.env)
     ```bash
     mv default.env .env
     ```
 
-## How to Run:
+## How to Run
 
 Run `dev` for start server dev mode:
 
