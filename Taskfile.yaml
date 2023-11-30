@@ -2,6 +2,8 @@
 
 version: "3"
 
+dotenv:
+  - .env
 vars:
   APP_NAME: template_backend_api
   APP_BUILD: 1
@@ -23,16 +25,15 @@ tasks:
     silent: true
 
   dev:
-    dotenv:
-      - .env
     cmds:
-      - go run main.go serv
+      - go run  {{.GO_LDFLAGS}}  main.go serv
+  migrate:
+    cmds:
+      - go run  {{.GO_LDFLAGS}}  main.go migrate
 
   version:
-    dotenv:
-      - .env
     cmds:
-      - go run main.go version
+      - go run  {{.GO_LDFLAGS}}  main.go version
   swag:
     cmds:
       - swag init

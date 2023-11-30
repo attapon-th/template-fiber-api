@@ -8,6 +8,8 @@ import (
 
 // Init initializes fiber router
 func createRestAPIRouter(r fiber.Router) {
-	apiV1 := r.Group("/v1")
-	todoctl.NewTodoCtl(apiV1.Group("/todos")) // prefix+/api/v1/todos
+	r.Route("/v1", func(r fiber.Router) {
+		todoctl.NewTodoCtl(r.Group("/todos")) // prefix+/api/v1/todos
+	})
+
 }

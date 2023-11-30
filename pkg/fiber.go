@@ -40,6 +40,7 @@ func NewFiber(config ...fiber.Config) *FiberConfig {
 			DisablePreParseMultipartForm: true,
 			DisableStartupMessage:        true,
 			CaseSensitive:                true,
+			EnablePrintRoutes:            true,
 			Views:                        nil,
 			JSONEncoder:                  jsonMarshal,
 			JSONDecoder:                  json.Unmarshal,

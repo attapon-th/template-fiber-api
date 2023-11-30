@@ -37,6 +37,7 @@ func init() {
 
 // InitConfig set default for viper
 func initConfig() {
+
 	viper.SetEnvPrefix("FB")
 	viper.AutomaticEnv() // read in environment variables that match
 

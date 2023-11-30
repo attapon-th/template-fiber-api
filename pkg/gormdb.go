@@ -2,13 +2,14 @@ package pkg
 
 import (
 	"crypto/sha256"
+	"fmt"
 	"os"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/attapon-th/template-fiber-api/helper"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -16,7 +17,7 @@ import (
 )
 
 var (
-	dbs sync.Map
+	dbs map[string]*gorm.DB = make(map[string]*gorm.DB)
 
 	defaultGormLoggerConfig = logger.Config{
 		SlowThreshold:             200 * time.Millisecond,
@@ -27,17 +28,18 @@ var (
 )
 
 // ConnectPostgreSQL connect postgresql database
-func ConnectPostgreSQL(dsn string, cfgs ...*gorm.Config) (*gorm.DB, error) {
+func ConnectPostgreSQL(dsn string, cfgs ...*gorm.Config) *gorm.DB {
 
 	h := sha256.New224()
-	hStr := helper.B2S(h.Sum([]byte(dsn)))
+	h.Write(helper.S2B(dsn))
+	hStr := fmt.Sprintf("%x", h.Sum(nil))
+	log.Debug().Str("dsn", dsn).Str("hash", hStr).Send()
 
-	if d, ok := dbs.Load(hStr); ok && d != nil {
-		if db, ok := d.(*gorm.DB); ok && db != nil {
-			return db, nil
-		}
+	if db, ok := dbs[hStr]; ok && db != nil {
+		return db
 	}
-	cfg := &gorm.Config{}
+
+	var cfg *gorm.Config
 	if len(cfgs) == 0 {
 		cfg = &gorm.Config{
 			DisableForeignKeyConstraintWhenMigrating: true,
@@ -50,18 +52,19 @@ func ConnectPostgreSQL(dsn string, cfgs ...*gorm.Config) (*gorm.DB, error) {
 
 	db, err := gorm.Open(postgres.Open(dsn), cfg)
 	if err != nil {
-		return nil, err
+		log.Fatal().Err(err).Msg("Failed to connect to database")
+		return nil
 	}
-	dbs.Store(hStr, db)
-	return db, nil
+	dbs[hStr] = db
+	return db
 
 }
 
 func getGormLogger() logger.Interface {
 	logSQL := viper.GetString("log_sql")
-	l := logger.Discard
+	var l logger.Interface
 	if logSQL == "default" {
-		l = logger.New(newGormLoggerFileWriter(viper.GetString("log_file")), defaultGormLoggerConfig)
+		l = logger.New(newGormLoggerConsoleWriter(), defaultGormLoggerConfig)
 	} else if strings.HasSuffix(logSQL, ".log") {
 		cfg := defaultGormLoggerConfig
 		cfg.LogLevel = logger.Info

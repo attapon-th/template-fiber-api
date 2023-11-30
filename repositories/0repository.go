@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 
+	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
@@ -21,6 +22,9 @@ type Repository[T TableModel] struct {
 
 // NewRepository create new repository for Table Model
 func NewRepository[T TableModel](db *gorm.DB, model T) *Repository[T] {
+	if viper.GetBool("dev") {
+		db = db.Debug()
+	}
 	return &Repository[T]{
 		db:    db,
 		tx:    db.Model(&model),
@@ -148,10 +152,10 @@ func (r *Repository[T]) OrderBy(order string) *Repository[T] {
 // count = r.Count()
 func (r *Repository[T]) Find(results any) *Repository[T] {
 	if r.tx == nil {
-		r.db.Model(r.model).Find(&results)
+		r.db.Model(r.model).Find(results)
 		return r
 	}
-	r.tx = r.tx.Find(&results)
+	r.tx = r.tx.Find(results)
 	return r
 }
 
@@ -162,10 +166,10 @@ func (r *Repository[T]) Find(results any) *Repository[T] {
 // r.Where("name = ?", "john").First()
 func (r *Repository[T]) First(result any) *Repository[T] {
 	if r.tx == nil {
-		r.db.Model(r.model).First(&result)
+		r.db.Model(r.model).First(result)
 		return r
 	}
-	r.tx = r.tx.First(&result)
+	r.tx = r.tx.First(result)
 	return r
 }
 

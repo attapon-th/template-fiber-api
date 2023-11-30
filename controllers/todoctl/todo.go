@@ -3,6 +3,7 @@ package todoctl
 import (
 	"strconv"
 
+	"github.com/attapon-th/template-fiber-api/schemas"
 	"github.com/attapon-th/template-fiber-api/services/todosrv"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog"
@@ -16,13 +17,15 @@ var (
 // NewTodoCtl creates a new todo controller
 func NewTodoCtl(r fiber.Router) {
 	log = zlog.With().Str("ctl", "todo").Logger()
+	r.Route("/", func(r fiber.Router) {
+		r.Get("/", gets)         // get list data
+		r.Get("/:id", getByID)   // get by id
+		r.Post("/", create)      // add data
+		r.Put("/:id", update)    // update all data
+		r.Patch("/:id", patch)   // update some data
+		r.Delete("/:id", delete) // soft delete by default
+	}).Name("todo")
 
-	r.Get("/", gets)         // get list data
-	r.Get("/:id", getByID)   // get by id
-	r.Post("/", create)      // add data
-	r.Put("/:id", update)    // update all data
-	r.Patch("/:id", patch)   // update some data
-	r.Delete("/:id", delete) // soft delete by default
 	log.Info().Msg("New Todo Contoller initialized")
 }
 
@@ -50,21 +53,46 @@ func getByID(c *fiber.Ctx) error {
 }
 
 func create(c *fiber.Ctx) error {
-	// TODO: implement me
-	return nil
+	data := schemas.TodoItem{}
+
+	if err := c.BodyParser(&data); err != nil {
+		return fiber.NewError(400, "can't parse body, "+err.Error())
+	}
+	sv := todosrv.NewTodoService(c.UserContext())
+
+	res := sv.Create(&data)
+
+	return c.Status(res.Code).JSON(res)
 }
 
 func update(c *fiber.Ctx) error {
-	// TODO: implement me
-	return nil
+	id := c.Params("id")
+	if len(id) != 27 {
+		return fiber.NewError(400, "invalid id")
+	}
+	data := schemas.TodoItem{}
+
+	if err := c.BodyParser(&data); err != nil {
+		return fiber.NewError(400, "can't parse body, "+err.Error())
+	}
+	sv := todosrv.NewTodoService(c.UserContext())
+
+	result := sv.Update(id, &data)
+
+	return c.Status(result.Code).JSON(result)
 }
 
 func patch(c *fiber.Ctx) error {
-	// TODO: implement me
-	return nil
+	// same update
+	return update(c)
 }
 
 func delete(c *fiber.Ctx) error {
-	// TODO: implement me
-	return nil
+	id := c.Params("id")
+	if len(id) != 27 {
+		return fiber.NewError(400, "invalid id")
+	}
+	sv := todosrv.NewTodoService(c.UserContext())
+	result := sv.Delete(id)
+	return c.Status(result.Code).JSON(result.APIResponse)
 }

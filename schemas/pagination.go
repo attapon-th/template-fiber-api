@@ -34,8 +34,8 @@ func NewPagination(currentPage, sizePage int64) *Pagination {
 	return &Pagination{
 		CurrentPage:  null.NewInt(currentPage, true),
 		SizePage:     null.NewInt(sizePage, true),
-		TotalRecords: null.NewInt(0, false),
-		TotalPages:   null.NewInt(0, false),
+		TotalRecords: null.NewInt(0, true),
+		TotalPages:   null.NewInt(0, true),
 		NextPage:     null.NewString("", false),
 		PrevPage:     null.NewString("", false),
 	}
@@ -51,12 +51,13 @@ func NewPaginationFull(currentPage, sizePage, totalRecord int64) *Pagination {
 // if total record < 1 return total_pages = null and total_record = null
 func (p *Pagination) SetTotalRecord(totalRecord int64) *Pagination {
 	sizePage := p.SizePage.ValueOrZero()
+	p.TotalRecords = null.IntFrom(totalRecord)
 	if sizePage < 1 {
 		sizePage = 10
 	}
 	if totalRecord < 1 {
-		p.TotalPages.Valid = false
-		p.TotalRecords.Valid = false
+		p.TotalPages.SetValid(0)
+		p.TotalRecords.SetValid(0)
 		return p
 	}
 
@@ -65,6 +66,7 @@ func (p *Pagination) SetTotalRecord(totalRecord int64) *Pagination {
 		totalPage++
 	}
 	p.TotalPages = null.IntFrom(totalPage)
+
 	return p
 }
 
