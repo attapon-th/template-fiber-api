@@ -7,7 +7,7 @@ func init() {
 
 	viper.SetDefault("enveronment", "production")
 	viper.SetDefault("dev", 0) // debug mode
-	viper.SetDefault("domain", "localhost")
+	viper.SetDefault("baseURL", "http://localhost:8888")
 	viper.SetDefault("host", "0.0.0.0")
 	viper.SetDefault("port", "8888")
 	viper.SetDefault("prefork", "1")
@@ -29,8 +29,7 @@ func init() {
 	viper.SetDefault("LOG_CALLER", 0) //  0 or 1 is show caller code
 
 	// LOG_SQL
-	// discard:   Discard logger will print any log to io.Discard
-	// default:   gorm default log
+	// console:   gorm default log show in stdout
 	// $Filename: save traceRecoder into filename (if file extension = `.log`)
-	viper.SetDefault("LOG_SQL", "default")
+	viper.SetDefault("LOG_SQL", "console")
 }

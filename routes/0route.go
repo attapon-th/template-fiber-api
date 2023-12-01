@@ -10,17 +10,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-var (
-	prefix = "/"
-	router *fiber.App
-)
-
 // NewRouters initializes fiber router
 func NewRouters(r fiber.Router) {
-	prefix = viper.GetString("prefix")
+	prefix := viper.GetString("prefix")
 	prefix = strings.TrimSuffix(prefix, "/")
-
-	router = r.(*fiber.App)
 
 	r.Use("/", middlewares.NewHelmet(),
 		middlewares.NewCORS(),
@@ -32,11 +25,11 @@ func NewRouters(r fiber.Router) {
 	pingctl.NewPingCtl(r.Group(prefix + "/ping"))
 
 	log.Debug().Str("path", prefix+"/public").Msg("Router Public")
-	createStaticRoute(r.Group(prefix + "/public"))
+	createStaticRoute(r, prefix+"/public")
 
 	log.Debug().Str("path", prefix+"/api").Msg("Router RestAPI")
-	createRestAPIRouter(r.Group(prefix + "/api"))
+	createRestAPIRouter(r, prefix+"/api")
 
 	log.Debug().Str("path", prefix+"/swagger").Msg("Router swagger")
-	cretateSwagerRoute(r.Group(prefix + "/swagger"))
+	cretateSwagerRoute(r, prefix+"/swagger")
 }

@@ -31,9 +31,6 @@ func (s *TodoService) Context(ctx context.Context) *TodoService {
 func (s *TodoService) Create(data *schemas.TodoItem) *schemas.TodoOne {
 	r := s.todoRepo
 	result := schemas.NewTodoOne()
-	result.Data = schemas.Todo{
-		TodoItem: *data,
-	}
 	// convert schema to model
 	md := models.Todo{
 		Name:        data.Name,

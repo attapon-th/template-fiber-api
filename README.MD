@@ -31,6 +31,7 @@ with Fiber V2 Framework
 - [Swag Go](https://github.com/swaggo/swag) - Swag converts Go annotations to Swagger Documentation 2.0. 
 
 
+
 ## How to setup
 
 1. Init Go Module

@@ -29,6 +29,19 @@ func NewTodoCtl(r fiber.Router) {
 	log.Info().Msg("New Todo Contoller initialized")
 }
 
+// @Summary		Show todos
+// @Description	get todos
+// @Tags			todos
+// @Accept			json
+// @Param			id			query	string	false	"Filter  ID"
+// @Param			name		query	string	false	"Filter name"
+// @Param			status_id	query	int		false	"Todo id status"
+// @Param			_page		query	int		false	"Page number of Todo Data"	default(1)
+// @Param			_limit		query	int		false	"Limit Todo Data"			default(10)
+// @Produce		json
+// @Success		200		{object}	schemas.Todos
+// @Failure		default	{object}	schemas.Todos	"not success"
+// @Router			/todos [get]
 func gets(c *fiber.Ctx) error {
 
 	sv := todosrv.NewTodoService(c.UserContext())
@@ -38,9 +51,22 @@ func gets(c *fiber.Ctx) error {
 	page, _ := strconv.ParseInt(c.Query("_page", "1"), 10, 64)
 
 	result := sv.Gets(limit, page, q)
+	if result.Code != 200 {
+		result.Data = nil
+	}
 	return c.Status(result.Code).JSON(result)
 
 }
+
+// @Summary		Show todo by id
+// @Description	get todos by id
+// @Tags			todos
+// @Accept			json
+// @Produce		json
+// @Param			id		path		int	true	"Todo ID"
+// @Success		200		{object}	schemas.TodoOne
+// @Failure		default	{object}	schemas.TodoOne
+// @Router			/todos/{id} [get]
 func getByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if len(id) != 27 {
@@ -52,6 +78,15 @@ func getByID(c *fiber.Ctx) error {
 	return c.JSON(result)
 }
 
+// @Summary		Create Todo
+// @Description	create todo
+// @Tags			todos
+// @Accept			json
+// @Produce		json
+// @Param			request	body		schemas.TodoItem	true	"Todo Item"
+// @Success		200		{object}	schemas.TodoOne
+// @Failure		default	{object}	schemas.TodoOne
+// @Router			/todos [post]
 func create(c *fiber.Ctx) error {
 	data := schemas.TodoItem{}
 
@@ -65,6 +100,16 @@ func create(c *fiber.Ctx) error {
 	return c.Status(res.Code).JSON(res)
 }
 
+// @Summary		Update Todo
+// @Description	Update todo by ID
+// @Tags			todos
+// @Accept			json
+// @Produce		json
+// @Param			request	body		schemas.TodoItem	true	"Todo Item"
+// @Param			id		path		int					true	"Todo ID"
+// @Success		200		{object}	schemas.TodoOne
+// @Failure		default	{object}	schemas.TodoOne
+// @Router			/todos/{id} [put]
 func update(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if len(id) != 27 {
@@ -82,11 +127,30 @@ func update(c *fiber.Ctx) error {
 	return c.Status(result.Code).JSON(result)
 }
 
+// @Summary		Update Todo some data
+// @Description	Update todo by ID
+// @Tags			todos
+// @Accept			json
+// @Produce		json
+// @Param			request	body		schemas.TodoItem	true	"Todo Item"
+// @Param			id		path		int					true	"Todo ID"
+// @Success		200		{object}	schemas.TodoOne
+// @Failure		default	{object}	schemas.TodoOne
+// @Router			/todos/{id} [patch]
 func patch(c *fiber.Ctx) error {
 	// same update
 	return update(c)
 }
 
+// @Summary		Delete Todo by ID
+// @Description	Update todo by ID
+// @Tags			todos
+// @Accept			json
+// @Produce		json
+// @Param			id		path		int	true	"Todo ID"
+// @Success		200		{object}	schemas.TodoOne
+// @Failure		default	{object}	schemas.TodoOne
+// @Router			/todos/{id} [delete]
 func delete(c *fiber.Ctx) error {
 	id := c.Params("id")
 	if len(id) != 27 {

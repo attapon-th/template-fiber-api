@@ -63,10 +63,11 @@ func ConnectPostgreSQL(dsn string, cfgs ...*gorm.Config) *gorm.DB {
 func getGormLogger() logger.Interface {
 	logSQL := viper.GetString("log_sql")
 	var l logger.Interface
-	if logSQL == "default" {
+	if logSQL == "console" {
 		l = logger.New(newGormLoggerConsoleWriter(), defaultGormLoggerConfig)
 	} else if strings.HasSuffix(logSQL, ".log") {
 		cfg := defaultGormLoggerConfig
+		cfg.Colorful = false
 		cfg.LogLevel = logger.Info
 		l = logger.New(newGormLoggerFileWriter(logSQL), cfg)
 	} else {

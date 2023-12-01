@@ -6,7 +6,7 @@ type APIResponse struct {
 	OK      bool   `json:"ok"`
 	Code    int    `json:"code"`
 	Message string `json:"message"`
-}
+} // @name APIResponse
 
 // NewAPIResponse create new APIResponse
 func NewAPIResponse(code int, message string) *APIResponse {

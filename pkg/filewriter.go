@@ -9,19 +9,23 @@ import (
 
 	"github.com/rs/zerolog/diode"
 	"github.com/rs/zerolog/log"
+	"github.com/spf13/viper"
 	"github.com/utahta/go-cronowriter"
 )
 
 // CronFileWriter create log file The file path is constructed based on current date and time, like cronolog.
 func CronFileWriter(filename string) *cronowriter.CronoWriter {
-	err := os.MkdirAll(path.Dir(filename), os.ModePerm)
+	logDir := viper.GetString("log_dir")
+	err := os.MkdirAll(logDir, os.ModePerm)
 	if err != nil {
 		log.Fatal().Str("dir", path.Dir(filename)).Msg(err.Error())
 		return nil
 	}
+	filename = path.Join(logDir, filename)
+	ext := path.Ext(filename)
+	filename = filename[0:len(filename)-len(ext)] + "-%Y%m%d" + ext
 
-	fStr, ext := path.Split(filename)
-	return cronowriter.MustNew(fStr+"-%Y%m%d"+ext, cronowriter.WithInit(), cronowriter.WithMutex())
+	return cronowriter.MustNew(filename, cronowriter.WithInit(), cronowriter.WithMutex())
 }
 
 // NewDiodeWriter Thread-safe, lock-free, non-blocking writer
@@ -34,7 +38,7 @@ func NewDiodeWriter(w io.WriteCloser) io.WriteCloser {
 
 // NewDiodeCronWriter  logfile rotation and Thread-safe, lock-free, non-blocking writer
 func NewDiodeCronWriter(filename string) io.WriteCloser {
-	w := NewDiodeCronWriter(filename)
+	w := CronFileWriter(filename)
 	wr := NewDiodeWriter(w)
 	return wr
 }

@@ -36,8 +36,8 @@ tasks:
       - go run  {{.GO_LDFLAGS}}  main.go version
   swag:
     cmds:
-      - swag init
       - swag fmt
+      - swag init
   mod:
     cmds:
       - go mod download

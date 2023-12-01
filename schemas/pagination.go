@@ -10,7 +10,7 @@ type Pagination struct {
 	SizePage     null.Int    `json:"size_page"`
 	PrevPage     null.String `json:"prev_page"`
 	NextPage     null.String `json:"next_page"`
-}
+} //	@name	Pagination
 
 // PaginationWithoutTotal pagination
 // without total record and total pages for response metadata
@@ -19,7 +19,7 @@ type PaginationWithoutTotal struct {
 	SizePage    null.Int    `json:"size_page"`
 	PrevPage    null.String `json:"prev_page"`
 	NextPage    null.String `json:"next_page"`
-}
+} //	@name	Pagination
 
 // NewPagination create new pagination
 // default size_page = 10
