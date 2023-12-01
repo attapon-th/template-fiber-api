@@ -96,7 +96,7 @@ func FiberErrorHandler(c *fiber.Ctx, err error) error {
 	c.Set("Content-Type", fiber.MIMEApplicationJSONCharsetUTF8)
 
 	// Send custom error page
-	err = c.Status(code).JSON(fiber.Map{
+	_ = c.Status(code).JSON(fiber.Map{
 		"code":    code,
 		"ok":      false,
 		"message": msg,
