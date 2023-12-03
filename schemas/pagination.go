@@ -4,10 +4,10 @@ import "github.com/attapon-th/null"
 
 // Pagination pagination response metadata
 type Pagination struct {
-	TotalRecords null.Int    `json:"total_records"`
-	TotalPages   null.Int    `json:"total_pages"`
-	CurrentPage  null.Int    `json:"current_page"`
-	SizePage     null.Int    `json:"size_page"`
+	TotalRecords null.Int    `json:"total_records"` // จำนวนรายการทั้งหมด
+	TotalPages   null.Int    `json:"total_pages"`   // จำนวนหน้า
+	CurrentPage  null.Int    `json:"current_page"`  // หน้าปัจจุบัน
+	SizePage     null.Int    `json:"size_page"`     // ขนาดหน้า
 	PrevPage     null.String `json:"prev_page"`
 	NextPage     null.String `json:"next_page"`
 } //	@name	Pagination
@@ -75,7 +75,6 @@ func (p *Pagination) GetLimitOffset() (limit int64, offset int64) {
 	limit = p.SizePage.ValueOrZero()
 	offset = (p.CurrentPage.ValueOrZero() - 1) * p.SizePage.ValueOrZero()
 	return
-
 }
 
 // GetPaginationWithoutTotal get pagination without total field (total_record, total_pages)

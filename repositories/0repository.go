@@ -51,6 +51,7 @@ func (r *Repository[T]) GetTx() *gorm.DB {
 }
 
 // Where function for create WHERE condition same as gorm
+// Where("name = ?", "john")
 func (r *Repository[T]) Where(query string, args ...interface{}) *Repository[T] {
 	if r.tx == nil {
 		r.tx = r.db.Model(r.model).Where(query, args...)

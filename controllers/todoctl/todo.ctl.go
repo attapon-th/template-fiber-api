@@ -18,12 +18,12 @@ var (
 func NewTodoCtl(r fiber.Router) {
 	log = zlog.With().Str("ctl", "todo").Logger()
 	r.Route("/", func(r fiber.Router) {
-		r.Get("/", gets)         // get list data
-		r.Get("/:id", getByID)   // get by id
-		r.Post("/", create)      // add data
-		r.Put("/:id", update)    // update all data
-		r.Patch("/:id", patch)   // update some data
-		r.Delete("/:id", delete) // soft delete by default
+		r.Get("/", gets)          // get list data
+		r.Get("/:id", getByID)    // get by id
+		r.Post("/", create)       // add data
+		r.Put("/:id", update)     // update all data
+		r.Patch("/:id", patch)    // update some data
+		r.Delete("/:id/", delete) // soft delete by default
 	}).Name("todo")
 
 	log.Info().Msg("New Todo Contoller initialized")

@@ -295,6 +295,7 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "current_page": {
+                    "description": "หน้าปัจจุบัน",
                     "type": "integer"
                 },
                 "next_page": {
@@ -304,12 +305,15 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "size_page": {
+                    "description": "ขนาดหน้า",
                     "type": "integer"
                 },
                 "total_pages": {
+                    "description": "จำนวนหน้า",
                     "type": "integer"
                 },
                 "total_records": {
+                    "description": "จำนวนรายการทั้งหมด",
                     "type": "integer"
                 }
             }
