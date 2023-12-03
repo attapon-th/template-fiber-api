@@ -60,9 +60,9 @@ with Fiber V2 Framework
     go mod vendor
     ```
 
-5. Rename [`default.env`](./default.env) to [`.env`](./.env)
+5. migrate database
     ```bash
-    mv default.env .env
+    task migrate
     ```
 
 ## How to Run
