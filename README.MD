@@ -8,19 +8,12 @@ with Fiber V2 Framework
 ## Table of Contents
 - [Goland Template API Service](#goland-template-api-service)
   - [Table of Contents](#table-of-contents)
-  - [Root Folder Structure](#root-folder-structure)
-  - [Go Import Flow](#go-import-flow)
   - [Prerequisites](#prerequisites)
   - [How to setup](#how-to-setup)
   - [How to Run](#how-to-run)
+  - [Root Folder Structure](#root-folder-structure)
+  - [Go Import Flow](#go-import-flow)
 
-
-## Root Folder Structure
-
-<img src="./images/folder-structure.png" width="800px" alt="Folder Structure" />
-
-## Go Import Flow
-<img src="./images/go-import-flow.png" width="800px" alt="Folder Structure" />
 
 
 ## Prerequisites
@@ -36,7 +29,7 @@ with Fiber V2 Framework
 
 1. Init Go Module
     ```bash
-    go mod init github.com/xxx/xxx
+    go mod init __your_project_name__
     ```
 
 2. Replace `default.env` to [`.env`](./.env)
@@ -91,3 +84,11 @@ Run `docker-build` fors Build Docker Image:
 ```bash
 task docker-build
 ```
+
+## Root Folder Structure
+
+<img src="./images/folder-structure.png" width="800px" alt="Folder Structure" />
+
+## Go Import Flow
+<img src="./images/go-import-flow.png" width="800px" alt="Folder Structure" />
+
