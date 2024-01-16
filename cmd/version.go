@@ -43,7 +43,7 @@ func init() {
 		Build = "dev"
 	}
 
-	Version = fmt.Sprintf("%.4d-%.2d-%.2d.%s", Timestamp.Year(), Timestamp.Month(), Timestamp.Day(), Build)
+	Version = fmt.Sprintf("%.2d.%s.%s", Timestamp.Year()%100, Version, Build)
 	// log.Info().Msg("Version: " + Version)
 
 	viper.SetDefault("appname", AppName)
