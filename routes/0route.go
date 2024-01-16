@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	"github.com/attapon-th/template-fiber-api/controllers/pingctl"
-	"github.com/attapon-th/template-fiber-api/middlewares"
+	"github.com/attapon-th/template-fiber-api/controllers/todoctl"
+	"github.com/attapon-th/template-fiber-api/pkg/middlewares"
 	"github.com/gofiber/fiber/v2"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
@@ -15,21 +15,29 @@ func NewRouters(r fiber.Router) {
 	prefix := viper.GetString("prefix")
 	prefix = strings.TrimSuffix(prefix, "/")
 
-	r.Use("/", middlewares.NewHelmet(),
+	defaultMiddleware := []any{
+		"/",
+		middlewares.NewHelmet(),
 		middlewares.NewCORS(),
 		middlewares.NewLimit(),
 		middlewares.NewAccessLog(),
 		middlewares.NewCompress(),
-	)
+	}
 
-	pingctl.NewPingCtl(r.Group(prefix + "/ping"))
+	r.Use(defaultMiddleware...)
 
-	log.Debug().Str("path", prefix+"/public").Msg("Router Public")
-	createStaticRoute(r, prefix+"/public")
+	// Group Route
+	routeBaseGroup := r.Group(prefix).Group
+	apiPathPrefix := prefix + "/api/v1"
+	apiRouteGroup := r.Group(apiPathPrefix).Group
 
-	log.Debug().Str("path", prefix+"/api").Msg("Router RestAPI")
-	createRestAPIRouter(r, prefix+"/api")
+	// Static route
+	newStaticRoute(routeBaseGroup("/public"))
 
-	log.Debug().Str("path", prefix+"/swagger").Msg("Router swagger")
-	cretateSwagerRoute(r, prefix+"/swagger")
+	// Swagger
+	newSwagerRoute(routeBaseGroup("/swagger"), prefix)
+
+	// API Endpoint
+	pingctl.NewPings(routeBaseGroup("/ping"))
+	todoctl.NewTodos(apiRouteGroup("/todos"))
 }

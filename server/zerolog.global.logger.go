@@ -1,4 +1,4 @@
-package pkg
+package server
 
 import (
 	"io"
@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/attapon-th/template-fiber-api/pkg"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
@@ -33,7 +34,7 @@ func InitZeroLog() {
 			logDir = "./"
 		}
 		filename := path.Join(logDir, viper.GetString("log_file"))
-		f := NewDiodeCronWriter(filename)
+		f := pkg.NewDiodeCronWriter(filename)
 		if err != nil {
 			log.Fatal().Str("file", viper.GetString("log_file")).Msg(err.Error())
 		}

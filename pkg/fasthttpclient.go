@@ -3,7 +3,6 @@ package pkg
 import (
 	"time"
 
-	"github.com/attapon-th/template-fiber-api/helper"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/valyala/fasthttp"
@@ -61,10 +60,10 @@ func (w *FasthttpClient) FasthttpByte(requestURI string, method string, body []b
 		ldebug.Str("method", method)
 		req.Header.VisitAll(func(key, value []byte) {
 			ldebug.
-				Str("key", helper.B2S(key)).
-				Str("value", helper.B2S(value))
+				Str("key", B2S(key)).
+				Str("value", B2S(value))
 			req.Header.VisitAll(func(key, value []byte) {
-				ldebug.Str("key", helper.B2S(key)).Str("value", helper.B2S(value))
+				ldebug.Str("key", B2S(key)).Str("value", B2S(value))
 			})
 		})
 	}
@@ -85,9 +84,9 @@ func (w *FasthttpClient) FasthttpByte(requestURI string, method string, body []b
 		elapsed := time.Since(t1)
 		ldebug.Dur("elapsed", elapsed).Int("http status code", resp.StatusCode())
 		resp.Header.VisitAll(func(key, value []byte) {
-			ldebug.Str("key", helper.B2S(key)).Str("value", helper.B2S(value))
+			ldebug.Str("key", B2S(key)).Str("value", B2S(value))
 		})
-		ldebug.Str("http payload", helper.B2S(resp.Body()))
+		ldebug.Str("http payload", B2S(resp.Body()))
 	}
 	ldebug.Msg("response")
 

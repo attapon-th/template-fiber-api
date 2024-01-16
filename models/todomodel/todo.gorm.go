@@ -1,15 +1,11 @@
-package models
+package todomodel
 
 import "github.com/attapon-th/null"
 
-const (
-	fooTableName string = "Todo"
-	fooSchema    string = "public"
-	fooTable     string = fooSchema + "." + fooTableName
-)
+const TableNameTodo = SchemaName + "todo"
 
 // Todo Demo model
-type Todo struct {
+type TodoEntity struct {
 	ModelID
 	Name        null.String `json:"name" gorm:"column:name;type:varchar(100)"`
 	StatusID    null.Int    `json:"status_id" gorm:"column:status_id;type:int;"`
@@ -20,6 +16,6 @@ type Todo struct {
 }
 
 // TableName get table name
-func (m Todo) TableName() string {
-	return fooTable
+func (m TodoEntity) TableName() string {
+	return TableNameTodo
 }

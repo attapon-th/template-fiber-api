@@ -1,6 +1,6 @@
 // Package helper is a collection of useful functions
 // from https://github.com/tsingson/fasthttp-guide
-package helper
+package pkg
 
 import (
 	"encoding/binary"

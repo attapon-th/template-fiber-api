@@ -1,4 +1,4 @@
-package models
+package todomodel
 
 import (
 	"time"
@@ -7,6 +7,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/plugin/soft_delete"
 )
+
+const SchemaName = ""
 
 // ModelID primary key use ksuid
 type ModelID struct {

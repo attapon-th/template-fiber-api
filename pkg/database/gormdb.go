@@ -1,4 +1,4 @@
-package pkg
+package database
 
 import (
 	"crypto/sha256"
@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/attapon-th/template-fiber-api/helper"
+	"github.com/attapon-th/template-fiber-api/pkg"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
@@ -31,7 +31,7 @@ var (
 func ConnectPostgreSQL(dsn string, cfgs ...*gorm.Config) *gorm.DB {
 
 	h := sha256.New224()
-	h.Write(helper.S2B(dsn))
+	h.Write(pkg.S2B(dsn))
 	hStr := fmt.Sprintf("%x", h.Sum(nil))
 	log.Debug().Str("dsn", dsn).Str("hash", hStr).Send()
 
@@ -98,7 +98,7 @@ func newGormLoggerConsoleWriter() *gormLoggerWriter {
 }
 
 func newGormLoggerFileWriter(filename string) *gormLoggerWriter {
-	cs := NewDiodeCronWriter(filename)
+	cs := pkg.NewDiodeCronWriter(filename)
 	return &gormLoggerWriter{
 		log:  zerolog.New(cs).With().Timestamp().Logger(),
 		mode: "filemode",

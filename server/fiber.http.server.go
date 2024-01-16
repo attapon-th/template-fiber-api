@@ -1,32 +1,25 @@
-// Package pkg is the vaccine-hpv-api package
-package pkg
+package server
 
 import (
 	"errors"
+	"fmt"
 	"runtime"
-	"strconv"
 	"time"
 
+	"github.com/attapon-th/template-fiber-api/models"
+	"github.com/attapon-th/template-fiber-api/routes"
 	"github.com/goccy/go-json"
 	"github.com/gofiber/fiber/v2"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
 
-// FiberConfig is the Fiber configuration Version 2
-type FiberConfig struct {
-	app *fiber.App
-	fiber.Config
-	Port int
-	Host string
-}
-
 func jsonMarshal(v interface{}) ([]byte, error) {
 	return json.MarshalWithOption(v, json.UnorderedMap())
 }
 
 // NewFiber creates a new Fiber
-func NewFiber(config ...fiber.Config) *FiberConfig {
+func Listen(config ...fiber.Config) {
 	var cfg fiber.Config
 	if len(config) == 0 {
 		cfg = fiber.Config{
@@ -62,23 +55,20 @@ func NewFiber(config ...fiber.Config) *FiberConfig {
 		log.Info().Bool("prefork", cfg.Prefork).Int("maxProcessing", maxProcessing).Msg("Prefork enabled")
 	}
 
-	return &FiberConfig{
-		app:    fiber.New(cfg),
-		Port:   viper.GetInt("port"),
-		Host:   viper.GetString("host"),
-		Config: cfg,
+	app := fiber.New(cfg)
+
+	// Create Router
+	routes.NewRouters(app)
+
+	// start server
+	host := viper.GetString("host")
+	port := viper.GetInt("port")
+	log.Info().Str("host", host).Int("port", port).Msg("Server started")
+	err := app.Listen(fmt.Sprintf("%s:%d", host, port))
+	if err != nil {
+		log.Fatal().Err(err).Msg("Server error")
 	}
-}
-
-// Fiber returns the FiberConfig
-func (c *FiberConfig) Fiber() *fiber.App {
-	return c.app
-}
-
-// Listen starts the Fiber
-func (c *FiberConfig) Listen() error {
-	log.Info().Str("host", c.Host).Int("port", c.Port).Msg("Server started")
-	return c.app.Listen(c.Host + ":" + strconv.Itoa(c.Port))
+	log.Info().Msg("Server stopped")
 }
 
 // FiberErrorHandler handles errors
@@ -96,11 +86,7 @@ func FiberErrorHandler(c *fiber.Ctx, err error) error {
 	c.Set("Content-Type", fiber.MIMEApplicationJSONCharsetUTF8)
 
 	// Send custom error page
-	_ = c.Status(code).JSON(fiber.Map{
-		"code":    code,
-		"ok":      false,
-		"message": msg,
-	})
+	_ = c.Status(code).JSON(models.NewAPIResponse(false, msg))
 
 	// Return from handler
 	return nil

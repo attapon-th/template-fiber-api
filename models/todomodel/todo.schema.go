@@ -1,9 +1,12 @@
-package schemas
+package todomodel
 
-import "github.com/attapon-th/null"
+import (
+	"github.com/attapon-th/null"
+	"github.com/attapon-th/template-fiber-api/models"
+)
 
 // Todo Default data todo response
-type Todo struct {
+type TodoResponse struct {
 	ID          null.String `json:"id" `
 	Name        null.String `json:"name" `
 	StatusID    null.Int    `json:"status_id" `
@@ -22,25 +25,22 @@ type TodoItem struct {
 	Tags        null.String `json:"tags" `
 } // @name TodoItem
 
-// Todos schemage for list of todo with pagination response
-type Todos GetsAPIResponse[Todo] // @name Todos
+type Todos models.APIResponsePagination[TodoResponse]
 
-// NewTodos create new list of todo
+// NewAPIResponseTodos create new list of todo
 func NewTodos() *Todos {
 	return &Todos{
-		APIResponse: *NewAPIResponse(500, "Internal Server Error"),
-		Data:        []Todo{},
-		Pagination:  NewPagination(1, 10),
+		APIResponse: models.NewAPIResponse(true, "Success"),
+		Data:        []TodoResponse{},
+		Pagination:  models.NewPagination(1, 10),
 	}
 }
 
-// TodoOne schemage for todo response
-type TodoOne GetOneAPIResponse[Todo] // @name TodoOne
+type TodoOne models.APIResponseOne[TodoResponse]
 
-// NewTodoOne create new todo one
 func NewTodoOne() *TodoOne {
 	return &TodoOne{
-		APIResponse: *NewAPIResponse(500, "Internal Server Error"),
-		Data:        Todo{},
+		APIResponse: models.NewAPIResponse(true, "Success"),
+		Data:        &TodoResponse{},
 	}
 }
